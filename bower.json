@@ -1,0 +1,29 @@
+{
+  "name": "Prosimity",
+  "version": "0.0.0",
+  "homepage": "https://github.com/prosimity/iphone",
+  "authors": [
+    "csantosdev@gmail.com"
+  ],
+  "description": "Networking Ap",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.2.1",
+    "jquery": "~2.1.4",
+    "animate.css": "~3.3.0",
+    "handlebars": "~3.0.3",
+    "jso": "~2.0.1",
+    "foundation": "~5.5.2",
+    "jqueryui": "~1.11.4",
+    "jqueryui-touch-punch": "*",
+    "swiper": "~3.1.0",
+    "virtual-dom": "~2.1.1"
+  }
+}

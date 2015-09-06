@@ -1,0 +1,5 @@
+Barebone = {
+    Engines: {},
+    Managers: {},
+    Views: {}
+};

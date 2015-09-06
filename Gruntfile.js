@@ -15,15 +15,17 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: [
-                    'bootstrap.js',
-                    'BaseFunction.js',
-                    'Controller.js',
-                    'View.js',
-                    'ViewController.js',
-                    'engines/RenderEngine.js',
-                    'engines/HandlebarsRenderEngine.js',
+                    './src/bootstrap.js',
+                    './src/BaseFunction.js',
+                    './src/Controller.js',
+                    './src/views/View.js',
+                    './src/views/BaseView.js',
+                    './src/views/VirtualDOMView.js',
+                    './src/ViewController.js',
+                    './src/engines/RenderEngine.js',
+                    './src/engines/HandlebarsRenderEngine.js',
 
-                    'test.js'
+                    './examples/test.js'
                 ],
                 dest: (function() {
                     grunt.file.delete('app.js');

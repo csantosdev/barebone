@@ -1,3 +1,0 @@
-Barebone = {
-    Engines: {}
-};

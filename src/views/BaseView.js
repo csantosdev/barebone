@@ -1,4 +1,4 @@
-Barebone.View = Backbone.View.extend({
+Barebone.Views.BaseView = Backbone.View.extend({
 
     initialize: function() {
 
@@ -66,8 +66,10 @@ Barebone.View = Backbone.View.extend({
             throw new Error('Cannot render view, there is no render engine attached.');
         }
 
+        var self = this;
+
         this._engine.processTemplate(this._templatePath, context, function(html) {
-            console.log(html);
+            self.$el.html(html);
         });
     }
 });

@@ -61,6 +61,6 @@ Barebone.Engines.RenderEngine = Barebone.BaseFunction.extend({
      */
     _compile: function(html) {
 
-        throw new Error('RenderEngine::_compile must be implemented!');
+        return _.template(html);
     }
 });

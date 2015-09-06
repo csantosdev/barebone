@@ -19,11 +19,5 @@ Barebone.ViewController = Barebone.Views.BaseView.extend({
                 proto[name] = controller_proto[name];
             }
         });
-    },
-
-    stuff: function () {
-
-    },
-
-    afterAction: function(context) {}
+    }
 });

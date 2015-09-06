@@ -56,6 +56,26 @@ Barebone.Views.BaseView = Backbone.View.extend({
     },
 
     /**
+     * Hides the view.
+     */
+    hide: function() {
+
+        this.$el.hide();
+
+        return this;
+    },
+
+    /**
+     * Displays the view.
+     */
+    show: function() {
+
+        this.$el.show();
+
+        return this;
+    },
+
+    /**
      * Update elements to the DOM.
      *
      * @private

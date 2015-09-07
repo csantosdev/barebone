@@ -7,22 +7,32 @@ describe("Barebone.IO.FileLoader", function() {
   });
 
   it("should be able to load a local file", function(done) {
-    var contents;
-    loader.load('./support/templates/hello_world.html', function (_contents) {
-      contents = _contents;
-    });
-    done();
 
-    expect(contents).toEqual('Hello World!');
+    var success = function(contents) {
+      expect(contents).toEqual('Hello World!');
+      done();
+    };
+
+    var error = function() {
+      expect(false).toEqual(true); // This should never execute.
+      done();
+    };
+
+    loader.load('/base/spec/support/templates/hello_world.html', success, error);
   });
 
-  it("should throw an Error if loading a file that does not exist", function(done) {
+  it("should call error callback when loading a file that does not exist", function(done) {
 
-    var go = function() {
-      loader.load('./support/templates/404.html');
+    var success = function(contents) {
+      expect(false).toEqual(true); // This should never execute.
+      done();
     };
-    done();
 
-    expect(go).toThrowError(Error);
+    var error = function() {
+      done();
+    };
+
+    loader.load('/base/spec/support/templates/404.html', success, error)
+
   });
 });

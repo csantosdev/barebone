@@ -11,18 +11,20 @@ Barebone.IO.FileLoader = Barebone.BaseFunction.extend({
    * Loads a file.
    *
    * @param {string} filename
-   * @param {function} callback function(contents)
+   * @param {function} success function(contents)
+   * @param {function} error function(xhr)
    */
-  load: function(filename, callback) {
+  load: function(filename, success, error) {
 
     $.ajax({
       url: filename,
       success: function (contents) {
-        callback(contents);
+        success(contents);
       },
-      error: function () {
-        throw new Error('There was an error loading contents from: ' + filename);
+      error: function (xhr) {
+        error(xhr);
       }
     });
   }
+
 });

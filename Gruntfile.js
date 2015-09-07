@@ -7,7 +7,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
         watch: {
             files: [
-                './src/**/*'
+                './src/**/*.js',
+                './spec/**/*.js'
             ],
             tasks: ['concat']
         },
@@ -22,6 +23,7 @@ module.exports = function(grunt) {
                     './src/views/View.js',
                     './src/views/BaseView.js',
                     './src/views/VirtualDOMView.js',
+                    './src/views/renderers/BaseRenderer.js',
                     './src/views/compilers/BaseCompiler.js',
                     './src/views/compilers/HandlebarsCompiler.js',
                     './src/io/FileLoader.js',
@@ -40,4 +42,5 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['concat']);
+    grunt.registerTask('watch', ['watch']);
 };

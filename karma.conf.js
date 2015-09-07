@@ -21,7 +21,14 @@ module.exports = function(config) {
       './vendors/handlebars/handlebars.js',
       './vendors/blueimp-md5/js/md5.min.js',
       './app.js',
-      './spec/*.js'
+      './spec/*.js',
+      './spec/helpers/*.js',
+      {
+        pattern:  './spec/support/templates/*.html',
+        watched:  true,
+        served:   true,
+        included: false
+      }
     ],
 
 

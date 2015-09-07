@@ -19,14 +19,6 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this._fileLoader;
 
         /**
-         * Render engine instance.
-         *
-         * @type {Barebone.Engines.RenderEngine}
-         * @private
-         */
-        this._engine = null;
-
-        /**
          * View compiler instance.
          *
          * @type {Barebone.Views.Compilers.BaseCompiler}
@@ -61,7 +53,7 @@ Barebone.Views.BaseView = Backbone.View.extend({
         var self = this;
 
         this._fileLoader.load(this._templatePath, function(html) {
-            self._render(html, context);
+            self._renderer.render(self._compiler.compile(html, context));
         });
 
         return this;
@@ -90,18 +82,6 @@ Barebone.Views.BaseView = Backbone.View.extend({
     },
 
     /**
-    * Sets the render engine to use when rendering the view.
-    *
-    * @param {Barebone.Engines.Engine} engine
-    */
-    setRenderEngine: function(engine) {
-
-        this._engine = engine;
-
-        return this;
-    },
-
-    /**
     * Sets the view compiler used to compile the view's HTML.
     *
     * @param {Barebone.Views.Compilers.BaseCompiler} compiler
@@ -118,6 +98,16 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this._fileLoader = loader;
 
         return this;
+    },
+
+    /**
+    * Sets the render object used for this view.
+    *
+    * @param {Barebone.Views.Renderers.BaseRenderer} renderer
+    */
+    setRenderer: function(renderer) {
+
+        this._renderer = renderer;
     },
 
     /**
@@ -138,23 +128,5 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this.$el.show();
 
         return this;
-    },
-
-    /**
-    * Update elements to the DOM.
-    *
-    * @private
-    */
-    _render: function(context) {
-
-        if(!this._compiler) {
-          throw new Error('Cannot render view, there is no compiler attached.');
-        }
-
-        var self = this;
-
-        this._compiler.processTemplate(this._templatePath, context, function(html) {
-          self._renderer.render(html);
-        });
     }
 });

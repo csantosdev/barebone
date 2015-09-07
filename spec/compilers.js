@@ -7,7 +7,7 @@ describe("Barebone.Views.Compilers", function() {
     });
 
     it("should compile HTML with context", function() {
-      var template = '<div>My name is <%= name%></div>';
+      var template = '<div>My name is <%= name %></div>';
       var context = {name: 'Sephiroth'};
       var html = compiler.compile(template, context);
 

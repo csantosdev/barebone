@@ -28,8 +28,6 @@ module.exports = function(grunt) {
                     './src/views/compilers/HandlebarsCompiler.js',
                     './src/io/FileLoader.js',
                     './src/ViewController.js',
-                    './src/engines/RenderEngine.js',
-                    './src/engines/HandlebarsRenderEngine.js',
                     './src/managers/ViewManager.js',
                     './src/managers/ViewNotManagedException.js'
                 ],

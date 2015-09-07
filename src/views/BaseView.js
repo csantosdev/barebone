@@ -1,138 +1,160 @@
 Barebone.Views.BaseView = Backbone.View.extend({
 
-  initialize: function() {
+    initialize: function() {
+
+        /**
+         * Path to the template.
+         *
+         * @type {string}
+         * @private
+         */
+        this._templatePath = null;
+
+        /**
+         * FileLoader instance.
+         *
+         * @type {Barebone.IO.FileLoader}
+         * @private
+         */
+        this._fileLoader;
+
+        /**
+         * Render engine instance.
+         *
+         * @type {Barebone.Engines.RenderEngine}
+         * @private
+         */
+        this._engine = null;
+
+        /**
+         * View compiler instance.
+         *
+         * @type {Barebone.Views.Compilers.BaseCompiler}
+         * @private
+         */
+        this._compiler;
+
+        /**
+         * Renderer instance.
+         *
+         * @type {Barebone.Views.Renderers.BaseRenderer}
+         * @private
+         */
+        this._renderer;
+    },
 
     /**
-     * Path to the template.
-     *
-     * @type {string}
-     * @private
-     */
-    this._templatePath = null;
+    * Renders the template onto the view's DOM.
+    *
+    * @param {object} context
+    */
+    render: function(context) {
+
+        if(!this._templatePath) {
+            throw new Error('Cannot render view without first setting a template.');
+        }
+
+        if(!this._fileLoader) {
+            throw new Error('Cannot render view without first setting a file loader.');
+        }
+
+        var self = this;
+
+        this._fileLoader.load(this._templatePath, function(html) {
+            self._render(html, context);
+        });
+
+        return this;
+    },
+
+    renderHTML: function(html) {
+
+        var self = this;
+
+        this._compiler.processTemplate(this._templatePath, context, function(html) {
+          self._renderer.render(html);
+        });
+
+    },
 
     /**
-     * FileLoader instance.
-     *
-     * @type {Barebone.IO.FileLoader}
-     * @private
-     */
-    this._fileLoader;
+    * Sets the file path of the template to use when rendering.
+    *
+    * @param {string} path
+    */
+    setTemplatePath: function(path) {
+
+        this._templatePath = path;
+
+        return this;
+    },
 
     /**
-     * Render engine instance.
-     *
-     * @type {Barebone.Engines.RenderEngine}
-     * @private
-     */
-    this._engine = null;
+    * Sets the render engine to use when rendering the view.
+    *
+    * @param {Barebone.Engines.Engine} engine
+    */
+    setRenderEngine: function(engine) {
+
+        this._engine = engine;
+
+        return this;
+    },
 
     /**
-     * View compiler instance.
-     *
-     * @type {Barebone.Views.Compilers.BaseCompiler}
-     * @private
-     */
-    this._compiler;
+    * Sets the view compiler used to compile the view's HTML.
+    *
+    * @param {Barebone.Views.Compilers.BaseCompiler} compiler
+    */
+    setCompiler: function(compiler) {
+
+        this._compiler = compiler;
+
+        return this;
+    },
+
+    setFileLoader: function(loader) {
+
+        this._fileLoader = loader;
+
+        return this;
+    },
 
     /**
-     * Renderer instance.
-     *
-     * @type {Barebone.Views.Renderers.BaseRenderer}
-     * @private
-     */
-    this._renderer;
-  },
+    * Hides the view.
+    */
+    hide: function() {
 
-  /**
-   * Renders the template onto the view's DOM.
-   *
-   * @param {object} context
-   */
-  render: function(context) {
+        this.$el.hide();
 
-    this._render(context);
+        return this;
+    },
 
-    return this;
-  },
+    /**
+    * Displays the view.
+    */
+    show: function() {
 
-  /**
-   * Sets the file path of the template to use when rendering.
-   *
-   * @param {string} path
-   */
-  setTemplatePath: function(path) {
+        this.$el.show();
 
-    this._templatePath = path;
+        return this;
+    },
 
-    return this;
-  },
+    /**
+    * Update elements to the DOM.
+    *
+    * @private
+    */
+    _render: function(context) {
 
-  /**
-   * Sets the render engine to use when rendering the view.
-   *
-   * @param {Barebone.Engines.Engine} engine
-   */
-  setRenderEngine: function(engine) {
+        if(!this._compiler) {
+          throw new Error('Cannot render view, there is no compiler attached.');
+        }
 
-    this._engine = engine;
+        var self = this;
 
-    return this;
-  },
-
-  /**
-   * Sets the view compiler used to compile the view's HTML.
-   *
-   * @param {Barebone.Views.Compilers.BaseCompiler} compiler
-   */
-  setCompiler: function(compiler) {
-
-    this._compiler = compiler;
-
-    return this;
-  },
-
-  setFileLoader: function(loader) {
-
-    this._fileLoader = loader;
-
-    return this;
-  },
-
-  /**
-   * Hides the view.
-   */
-  hide: function() {
-
-    this.$el.hide();
-
-    return this;
-  },
-
-  /**
-   * Displays the view.
-   */
-  show: function() {
-
-    this.$el.show();
-
-    return this;
-  },
-
-  /**
-   * Update elements to the DOM.
-   *
-   * @private
-   */
-  _render: function(context) {
-
-    if(!this._compiler) {
-      throw new Error('Cannot render view, there is no compiler attached.');
+        this._compiler.processTemplate(this._templatePath, context, function(html) {
+          self._renderer.render(html);
+        });
     }
-
-    var self = this;
-
-    this._compiler.processTemplate(this._templatePath, context, function(html) {
-      self._renderer.render(html);
-    });
-  }
 });

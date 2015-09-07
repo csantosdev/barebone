@@ -19,6 +19,7 @@ module.exports = function(config) {
       './vendors/underscore/underscore.js',
       './vendors/backbone/backbone.js',
       './vendors/handlebars/handlebars.js',
+      './vendors/blueimp-md5/js/md5.min.js',
       './app.js',
       './spec/*.js'
     ],

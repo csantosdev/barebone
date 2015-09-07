@@ -1,6 +1,8 @@
 Barebone = {
-    Engines: {},
-    IO: {},
-    Managers: {},
-    Views: {}
+  Engines: {},
+  IO: {},
+  Managers: {},
+  Views: {
+    Compilers: {}
+  }
 };

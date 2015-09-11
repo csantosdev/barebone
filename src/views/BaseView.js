@@ -1,4 +1,27 @@
 Barebone.Views.BaseView = Backbone.View.extend({
+    /**
+     * FileLoader instance.
+     *
+     * @type {Barebone.IO.FileLoader}
+     * @private
+     */
+    _fileLoader: null,
+
+    /**
+     * View compiler instance.
+     *
+     * @type {Barebone.Views.Compilers.BaseCompiler}
+     * @private
+     */
+    _compiler: null,
+
+    /**
+     * Renderer instance.
+     *
+     * @type {Barebone.Views.Renderers.BaseRenderer}
+     * @private
+     */
+    _renderer: null,
 
     initialize: function() {
 
@@ -9,34 +32,11 @@ Barebone.Views.BaseView = Backbone.View.extend({
          * @private
          */
         this._templatePath = null;
-
-        /**
-         * FileLoader instance.
-         *
-         * @type {Barebone.IO.FileLoader}
-         * @private
-         */
-        this._fileLoader;
-
-        /**
-         * View compiler instance.
-         *
-         * @type {Barebone.Views.Compilers.BaseCompiler}
-         * @private
-         */
-        this._compiler;
-
-        /**
-         * Renderer instance.
-         *
-         * @type {Barebone.Views.Renderers.BaseRenderer}
-         * @private
-         */
-        this._renderer;
     },
 
     /**
-    * Renders the template onto the view's DOM.
+    * Renders the template onto the view's DOM then binds
+    * directive events.
     *
     * @param {object} context
     */
@@ -54,19 +54,23 @@ Barebone.Views.BaseView = Backbone.View.extend({
 
         this._fileLoader.load(this._templatePath, function(html) {
             self._renderer.render(self._compiler.compile(html, context));
+
+            if(self._templatePath == '/base/spec/support/templates/data_binding.html') {
+                var element = self.$el.find('[bb-model]');
+                var expression = element.attr('bb-model');
+                var split = expression.split('.');
+                element.on('keypress', function() {
+                    self[split[0]].set(split[1], $(this).val());
+                });
+            }
         });
 
         return this;
     },
 
-    renderHTML: function(html) {
+    renderHTML: function(html, context) {
 
-        var self = this;
-
-        this._compiler.processTemplate(this._templatePath, context, function(html) {
-          self._renderer.render(html);
-        });
-
+        this._renderer.render(this._compiler.compile(html, context));
     },
 
     /**
@@ -128,5 +132,13 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this.$el.show();
 
         return this;
+    },
+
+    /**
+     *
+     * @private
+     */
+    _bindDirectives: function() {
+
     }
 });

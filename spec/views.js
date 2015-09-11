@@ -54,6 +54,33 @@ describe("Barebone.Views.BaseView", function() {
 
   describe('View Functionality', function() {
 
+    describe('Data Binding', function() {
+
+      it('should bind a model to an input element via the bb-model directive', function(done) {
+
+        view.setFileLoader(new Barebone.IO.FileLoader());
+        view.setCompiler(new Barebone.Views.Compilers.BaseCompiler());
+        view.setRenderer(new Barebone.Views.Renderers.BaseRenderer(view.$el));
+        view.setTemplatePath('/base/spec/support/templates/data_binding.html');
+
+        var User = Backbone.Model.extend({});
+
+        view.user = new User();
+        view.render();
+
+        // Wait for DOM to update
+        setTimeout(function() {
+          var new_name = 'Sephiroth';
+          view.$el.find('#first_name').val(new_name);
+          view.$el.find('#first_name').trigger('keypress');
+
+          expect(view.user.get('first_name')).toEqual(new_name)
+          done();
+
+        }, DOM_UPDATE_WAIT);
+      });
+    });
+
     it("should successfully hide the view when hide() is called.", function () {
       view.hide();
 

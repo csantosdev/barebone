@@ -27,13 +27,13 @@ module.exports = function(grunt) {
                     './src/views/compilers/BaseCompiler.js',
                     './src/views/compilers/HandlebarsCompiler.js',
                     './src/io/FileLoader.js',
-                    './src/ViewController.js',
+                    './src/views/ViewController.js',
                     './src/managers/ViewManager.js',
                     './src/managers/ViewNotManagedException.js'
                 ],
                 dest: (function() {
-                    grunt.file.delete('app.js');
-                    return 'app.js';
+                    grunt.file.delete('barebone.js');
+                    return 'barebone.js';
                 })()
             }
         }

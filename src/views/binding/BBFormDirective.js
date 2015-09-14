@@ -4,11 +4,12 @@ Barebone.Views.Binding.BBFormDirective = Barebone.Views.Binding.Directive.extend
 
         var callback = element.attr('bb-form');
 
-        if(!view[callback]) {
-            throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
-        }
-
         element.on('submit', function() {
+
+            if(!view[callback]) {
+                throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
+            }
+
             view[callback]($(this).serializeArray(), element);
             return false;
         });

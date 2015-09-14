@@ -13,6 +13,11 @@ Barebone.Views.Renderers.BaseRenderer = Barebone.BaseFunction.extend({
         this._element = element;
     },
 
+    setElement: function(element) {
+
+        this._element = element;
+    },
+
     render: function(html) {
 
         this._element.html(html);

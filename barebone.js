@@ -271,6 +271,11 @@ Barebone.Views.Renderers.BaseRenderer = Barebone.BaseFunction.extend({
         this._element = element;
     },
 
+    setElement: function(element) {
+
+        this._element = element;
+    },
+
     render: function(html) {
 
         this._element.html(html);
@@ -341,11 +346,12 @@ Barebone.Views.Binding.BBFormDirective = Barebone.Views.Binding.Directive.extend
 
         var callback = element.attr('bb-form');
 
-        if(!view[callback]) {
-            throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
-        }
-
         element.on('submit', function() {
+
+            if(!view[callback]) {
+                throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
+            }
+
             view[callback]($(this).serializeArray(), element);
             return false;
         });
@@ -396,20 +402,18 @@ Barebone.Views.ViewController = Barebone.Views.BaseView.extend({
      */
     constructor: function ViewController() {
 
-        Barebone.Views.BaseView.prototype.constructor.call(this);
-
         var controller = new Barebone.Controller();
         var controller_proto = Object.getPrototypeOf(controller);
         var proto = Object.getPrototypeOf(this);
         var properties = Object.getOwnPropertyNames(controller_proto);
 
         properties.forEach(function(name) {
-           // if(proto[name] == undefined) {
+            if(proto[name] == undefined) {
                 proto[name] = controller_proto[name];
-            //}
+            }
         });
 
-
+        Barebone.Views.BaseView.prototype.constructor.call(this);
     }
 });
 /**

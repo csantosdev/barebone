@@ -3,6 +3,7 @@ Barebone = {
   IO: {},
   Managers: {},
   Views: {
+    Binding: {},
     Compilers: {},
     Renderers: {}
   }

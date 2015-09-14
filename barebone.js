@@ -3,6 +3,7 @@ Barebone = {
   IO: {},
   Managers: {},
   Views: {
+    Binding: {},
     Compilers: {},
     Renderers: {}
   }
@@ -123,6 +124,11 @@ Barebone.Views.BaseView = Backbone.View.extend({
 
         this._fileLoader.load(this._templatePath, function(html) {
             self._renderer.render(self._compiler.compile(html, context));
+
+            self.$el.find('[bb-form]').each(function() {
+                var directive = new Barebone.Views.Binding.BBFormDirective();
+                directive.run(($(this)), self);
+            });
 
             if(self._templatePath == '/base/spec/support/templates/data_binding.html') {
                 var element = self.$el.find('[bb-model]');
@@ -312,6 +318,43 @@ Barebone.Views.Compilers.HandlebarsCompiler = Barebone.Views.Compilers.BaseCompi
         this._templates[key] = Handlebars.compile(html);
 
         return this._templates[key](context);
+    }
+});
+/**
+ * Base Directive object for binding functionality from the view to the controller.
+ *
+ * @class Directive
+ * @namespace Barebone.Views.Binding
+ * @author Chris Santos
+ */
+Barebone.Views.Binding.Directive = Barebone.BaseFunction.extend({
+
+    run: function(value, controller) {
+
+
+    }
+
+});
+Barebone.Views.Binding.BBFormDirective = Barebone.Views.Binding.Directive.extend({
+
+    run: function(element, view) {
+
+        var callback = element.attr('bb-form');
+
+        if(!view[callback]) {
+            throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
+        }
+
+        element.on('submit', function() {
+            view[callback]($(this).serializeArray(), element);
+            return false;
+        });
+    }
+});
+Barebone.Views.Binding.BBModelDirective = Barebone.Views.Binding.Directive.extend({
+
+    run: function(value, controller) {
+
     }
 });
 /**

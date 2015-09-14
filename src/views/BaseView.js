@@ -55,6 +55,11 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this._fileLoader.load(this._templatePath, function(html) {
             self._renderer.render(self._compiler.compile(html, context));
 
+            self.$el.find('[bb-form]').each(function() {
+                var directive = new Barebone.Views.Binding.BBFormDirective();
+                directive.run(($(this)), self);
+            });
+
             if(self._templatePath == '/base/spec/support/templates/data_binding.html') {
                 var element = self.$el.find('[bb-model]');
                 var expression = element.attr('bb-model');

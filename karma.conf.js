@@ -20,7 +20,7 @@ module.exports = function(config) {
       './vendors/backbone/backbone.js',
       './vendors/handlebars/handlebars.js',
       './vendors/blueimp-md5/js/md5.min.js',
-      './app.js',
+      './barebone.js',
       './spec/*.js',
       './spec/helpers/*.js',
       {

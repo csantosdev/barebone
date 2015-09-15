@@ -1,8 +1,11 @@
-My name is:
-<input bb-model="user.first_name" type="text" name="first_name" id="first_name"/>
+bb-model
+<input bb-model="user" bb-model-property="first_name" type="text" name="first_name" id="first_name"/>
 
-Form:
-<form bb-form="onFormSubmit" action="POST">
+bb-submit
+<form bb-submit="onFormSubmit(event, data)" action="POST">
     <input type="text" name="title"/>
     <input type="text" name="age"/>
 </form>
+
+bb-click
+<a id="click-test" bb-click="user.get('myCollection').removeById(1)">Remove</a>

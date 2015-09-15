@@ -7,8 +7,13 @@
  */
 Barebone.Views.Binding.Directive = Barebone.BaseFunction.extend({
 
-    run: function(value, controller) {
-
+    /**
+     * Runs the logic that the directive perfoms.
+     *
+     * @param {string} value bb-directive="value"
+     * @param {object} element jQuery wrapped element.
+     */
+    run: function(value, element) {
 
     }
 

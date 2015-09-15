@@ -23,6 +23,19 @@ Barebone.Views.BaseView = Backbone.View.extend({
      */
     _renderer: null,
 
+    /**
+     * Directives used by this View.
+     *
+     * @type {object}
+     * @private
+     */
+    _directives: {
+        'bb-model': Barebone.Views.Binding.BBModelDirective,
+        //'bb-property': null,
+        'bb-submit': Barebone.Views.Binding.BBSubmitDirective,
+        'bb-click': Barebone.Views.Binding.BBClickDirective
+    },
+
     initialize: function() {
 
         /**
@@ -55,19 +68,13 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this._fileLoader.load(this._templatePath, function(html) {
             self._renderer.render(self._compiler.compile(html, context));
 
-            self.$el.find('[bb-form]').each(function() {
-                var directive = new Barebone.Views.Binding.BBFormDirective();
-                directive.run(($(this)), self);
-            });
-
-            if(self._templatePath == '/base/spec/support/templates/data_binding.html') {
-                var element = self.$el.find('[bb-model]');
-                var expression = element.attr('bb-model');
-                var split = expression.split('.');
-                element.on('keypress', function() {
-                    self[split[0]].set(split[1], $(this).val());
+            for(var directive in self._directives) {
+                var fn = self._directives[directive];
+                self.$el.find('[' + directive + ']').each(function() {
+                    var instance = new fn();
+                    instance.run.call(self, $(this).attr(directive), $(this));
                 });
-            }
+            };
         });
 
         return this;
@@ -137,13 +144,5 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this.$el.show();
 
         return this;
-    },
-
-    /**
-     *
-     * @private
-     */
-    _bindDirectives: function() {
-
     }
 });

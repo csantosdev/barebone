@@ -68,6 +68,65 @@ Barebone.Exception = function BareboneException(message, code) {
 
 Barebone.Exception.extend = Backbone.Model.extend;
 Barebone.Exception.prototype = new Error();
+/**
+ * Base Directive object for binding functionality from the view to the controller.
+ *
+ * @class Directive
+ * @namespace Barebone.Views.Binding
+ * @author Chris Santos
+ */
+Barebone.Views.Binding.Directive = Barebone.BaseFunction.extend({
+
+    /**
+     * Runs the logic that the directive perfoms.
+     *
+     * @param {string} value bb-directive="value"
+     * @param {object} element jQuery wrapped element.
+     */
+    run: function(value, element) {
+
+    }
+
+});
+Barebone.Views.Binding.BBSubmitDirective = Barebone.Views.Binding.Directive.extend({
+
+    run: function(expression, element) {
+
+        var self = this;
+
+        var fn = function(event, data) {
+            eval('this.' + expression);
+        };
+
+        element.on('submit', function(event) {
+            var data = $(this).serializeArray();
+            fn.call(self, event, data);
+        });
+    }
+});
+Barebone.Views.Binding.BBModelDirective = Barebone.Views.Binding.Directive.extend({
+
+    run: function(expression, element) {
+
+        var model = eval('this.' + expression);
+        var property = element.attr('bb-model-property');
+
+        element.on('keypress', function() {
+            model.set(property, $(this).val());
+        });
+    }
+});
+Barebone.Views.Binding.BBClickDirective = Barebone.Views.Binding.Directive.extend({
+
+    run: function(expression, element) {
+
+        var self = this;
+
+        element.on('click', function(event) {
+            eval('self.' + expression);
+        });
+    }
+});
 Barebone.Views.BaseView = Backbone.View.extend({
     /**
      * FileLoader instance.
@@ -92,6 +151,19 @@ Barebone.Views.BaseView = Backbone.View.extend({
      * @private
      */
     _renderer: null,
+
+    /**
+     * Directives used by this View.
+     *
+     * @type {object}
+     * @private
+     */
+    _directives: {
+        'bb-model': Barebone.Views.Binding.BBModelDirective,
+        //'bb-property': null,
+        'bb-submit': Barebone.Views.Binding.BBSubmitDirective,
+        'bb-click': Barebone.Views.Binding.BBClickDirective
+    },
 
     initialize: function() {
 
@@ -125,19 +197,13 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this._fileLoader.load(this._templatePath, function(html) {
             self._renderer.render(self._compiler.compile(html, context));
 
-            self.$el.find('[bb-form]').each(function() {
-                var directive = new Barebone.Views.Binding.BBFormDirective();
-                directive.run(($(this)), self);
-            });
-
-            if(self._templatePath == '/base/spec/support/templates/data_binding.html') {
-                var element = self.$el.find('[bb-model]');
-                var expression = element.attr('bb-model');
-                var split = expression.split('.');
-                element.on('keypress', function() {
-                    self[split[0]].set(split[1], $(this).val());
+            for(var directive in self._directives) {
+                var fn = self._directives[directive];
+                self.$el.find('[' + directive + ']').each(function() {
+                    var instance = new fn();
+                    instance.run.call(self, $(this).attr(directive), $(this));
                 });
-            }
+            };
         });
 
         return this;
@@ -207,14 +273,6 @@ Barebone.Views.BaseView = Backbone.View.extend({
         this.$el.show();
 
         return this;
-    },
-
-    /**
-     *
-     * @private
-     */
-    _bindDirectives: function() {
-
     }
 });
 Barebone.Views.VirtualDOMView = Barebone.Views.BaseView.extend({
@@ -323,43 +381,6 @@ Barebone.Views.Compilers.HandlebarsCompiler = Barebone.Views.Compilers.BaseCompi
         this._templates[key] = Handlebars.compile(html);
 
         return this._templates[key](context);
-    }
-});
-/**
- * Base Directive object for binding functionality from the view to the controller.
- *
- * @class Directive
- * @namespace Barebone.Views.Binding
- * @author Chris Santos
- */
-Barebone.Views.Binding.Directive = Barebone.BaseFunction.extend({
-
-    run: function(value, controller) {
-
-
-    }
-
-});
-Barebone.Views.Binding.BBFormDirective = Barebone.Views.Binding.Directive.extend({
-
-    run: function(element, view) {
-
-        var callback = element.attr('bb-form');
-
-        element.on('submit', function(event) {
-
-            if(!view[callback]) {
-                throw new Error('There is no callback method "' + callback+ '" on view cid "' + view.cid + '"');
-            }
-
-            view[callback](event, $(this).serializeArray(), element);
-        });
-    }
-});
-Barebone.Views.Binding.BBModelDirective = Barebone.Views.Binding.Directive.extend({
-
-    run: function(value, controller) {
-
     }
 });
 /**

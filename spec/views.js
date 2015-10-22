@@ -25,32 +25,34 @@ describe("Barebone.Views.BaseView", function() {
       view.setCompiler(new Barebone.Views.Compilers.BaseCompiler());
       view.setRenderer(new Barebone.Views.Renderers.BaseRenderer(view.$el));
       view.setTemplatePath('/base/spec/support/templates/hello_world.html');
-      view.render();
-
-      // Wait for DOM to update
-      setTimeout(function() {
+      view.render(null, function() {
         expect(view.$el.html()).toEqual('Hello World!');
         done();
-      }, DOM_UPDATE_WAIT);
-
+      });
     });
 
-    it("should properly render a view with context", function (done) {
+    it("should properly render a view with context", function(done) {
       view.setFileLoader(new Barebone.IO.FileLoader());
       view.setCompiler(new Barebone.Views.Compilers.BaseCompiler());
       view.setRenderer(new Barebone.Views.Renderers.BaseRenderer(view.$el));
       view.setTemplatePath('/base/spec/support/templates/my_name.html');
-      view.render({name: 'Sephiroth'});
-
-      // Wait for DOM to update
-      setTimeout(function() {
+      view.render({name: 'Sephiroth'}, function() {
         expect(view.$el.html()).toEqual('My name is Sephiroth');
         done();
-      }, DOM_UPDATE_WAIT);
+      });
+    });
 
+    it("should properly render a view with context and a callback", function(done) {
+      view.setFileLoader(new Barebone.IO.FileLoader());
+      view.setCompiler(new Barebone.Views.Compilers.BaseCompiler());
+      view.setRenderer(new Barebone.Views.Renderers.BaseRenderer(view.$el));
+      view.setTemplatePath('/base/spec/support/templates/my_name.html');
+      view.render({name: 'Sephiroth'}, function() {
+        expect(view.$el.html()).toEqual('My name is Sephiroth');
+        done()
+      });
     });
   });
-
 
   describe('View Functionality', function() {
 
@@ -66,18 +68,14 @@ describe("Barebone.Views.BaseView", function() {
         var User = Backbone.Model.extend({});
 
         view.user = new User();
-        view.render();
-
-        // Wait for DOM to update
-        setTimeout(function() {
+        view.render(null, function() {
           var new_name = 'Sephiroth';
           view.$el.find('#first_name').val(new_name);
           view.$el.find('#first_name').trigger('keypress');
 
           expect(view.user.get('first_name')).toEqual(new_name)
           done();
-
-        }, DOM_UPDATE_WAIT);
+        });
       });
     });
 
@@ -93,5 +91,4 @@ describe("Barebone.Views.BaseView", function() {
       expect(view.$el.css('display')).toEqual('block');
     });
   });
-
 });

@@ -181,8 +181,9 @@ Barebone.Views.BaseView = Backbone.View.extend({
     * directive events.
     *
     * @param {object} context
+    * @param {function} callback
     */
-    render: function(context) {
+    render: function(context, callback) {
 
         if(!this._templatePath) {
             throw new Error('Cannot render view without first setting a template.');
@@ -204,6 +205,10 @@ Barebone.Views.BaseView = Backbone.View.extend({
                     instance.run.call(self, $(this).attr(directive), $(this));
                 });
             };
+
+            if(callback) {
+                callback();
+            }
         });
 
         return this;
